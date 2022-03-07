@@ -15,6 +15,7 @@
 package io.netty.buffer.search;
 
 /**
+ * 同时搜索多个字符的接口
  * Interface for {@link SearchProcessor} that implements simultaneous search for multiple strings.
  * @see MultiSearchProcessorFactory
  */

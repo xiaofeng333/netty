@@ -30,18 +30,26 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
 /**
+ * 零个或多个字节(八字节)的随机顺序访问序列。该接口提供了字节数组({@code byte[]})
+ * 和 {@linkplain ByteBuffer NIO buffers}的抽象视图。
  * A random and sequential accessible sequence of zero or more bytes (octets).
  * This interface provides an abstract view for one or more primitive byte
  * arrays ({@code byte[]}) and {@linkplain ByteBuffer NIO buffers}.
  *
+ * buffer的创建
  * <h3>Creation of a buffer</h3>
  *
+ * 推荐使用{@link Unpooled}的方法创建一个buffer, 而不是直接调用其实现类的构造函数初始化。
  * It is recommended to create a new buffer using the helper methods in
  * {@link Unpooled} rather than calling an individual implementation's
  * constructor.
  *
+ * 随机存取访问
  * <h3>Random Access Indexing</h3>
  *
+ * 就像普通的字节数组一样, {@link ByteBuf}从0开始索引, 这意味着第一个字节的索引总是{@code 0},
+ * 最后一个字节的索引总是 {@link #capacity() capacity - 1}。 例如, 要迭代缓冲区的所有字节,
+ * 无论其内部实现如何, 都可以执行以下操作:
  * Just like an ordinary primitive byte array, {@link ByteBuf} uses
  * <a href="https://en.wikipedia.org/wiki/Zero-based_numbering">zero-based indexing</a>.
  * It means the index of the first byte is always {@code 0} and the index of the last byte is
@@ -56,7 +64,9 @@ import java.nio.charset.UnsupportedCharsetException;
  * }
  * </pre>
  *
+ * 顺序访问
  * <h3>Sequential Access Indexing</h3>
+ *
  *
  * {@link ByteBuf} provides two pointer variables to support sequential
  * read and write operations - {@link #readerIndex() readerIndex} for a read
@@ -144,6 +154,8 @@ import java.nio.charset.UnsupportedCharsetException;
  * readerIndex (0) <= writerIndex (decreased)        <=        capacity
  * </pre>
  *
+ * 请注意, 在调用 {@link #discardReadBytes()} 之后, writable bytes的内容并不确定。
+ * 在大多数情况下, writable bytes并不会移动, 甚至可以填充完全不同的数据, 这取决于底层缓冲区实现。
  * Please note that there is no guarantee about the content of writable bytes
  * after calling {@link #discardReadBytes()}.  The writable bytes will not be
  * moved in most cases and could even be filled with completely different data
@@ -192,6 +204,7 @@ import java.nio.charset.UnsupportedCharsetException;
  * the mark and reset methods in {@link InputStream} except that there's no
  * {@code readlimit}.
  *
+ * 衍生的的buffers
  * <h3>Derived buffers</h3>
  *
  * You can create a view of an existing buffer by calling one of the following methods:
@@ -236,6 +249,8 @@ import java.nio.charset.UnsupportedCharsetException;
  *
  * <h4>Strings</h4>
  *
+ * 多个 {@link #toString(Charset)} 方法可以转换 {@link ByteBuf} 为 {@link String}。
+ * 但是请注意 {@link #toString()} 不是转换方法。
  * Various {@link #toString(Charset)} methods convert a {@link ByteBuf}
  * into a {@link String}.  Please note that {@link #toString()} is not a
  * conversion method.
@@ -253,6 +268,9 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract int capacity();
 
     /**
+     * 调整buffer的容量。
+     * 如果 newCapacity 小于当前容量, 则截断此buffer的内容。
+     * 如果 newCapacity 大于当前容量, 则缓冲区会增加相应的长度 (newCapacity - currentCapacity), 内容为未指定数据。
      * Adjusts the capacity of this buffer.  If the {@code newCapacity} is less than the current
      * capacity, the content of this buffer is truncated.  If the {@code newCapacity} is greater
      * than the current capacity, the buffer is appended with unspecified data whose length is
@@ -263,6 +281,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteBuf capacity(int newCapacity);
 
     /**
+     * 返回此缓冲区的最大允许容量, 该值提供了 {@link #capacity()} 的上限。
      * Returns the maximum allowed capacity of this buffer. This value provides an upper
      * bound on {@link #capacity()}.
      */
@@ -298,6 +317,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteBuf order(ByteOrder endianness);
 
     /**
+     * 如果该buffer是另一个buffer的包装, 则返回底层的buffer。
      * Return the underlying buffer instance if this buffer is a wrapper of another buffer.
      *
      * @return {@code null} if this buffer is not a wrapper

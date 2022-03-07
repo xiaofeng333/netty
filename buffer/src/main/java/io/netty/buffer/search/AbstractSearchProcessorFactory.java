@@ -15,16 +15,23 @@
 package io.netty.buffer.search;
 
 /**
+ * 创建{@link SearchProcessor}s的工厂类基类。
  * Base class for precomputed factories that create {@link SearchProcessor}s.
  * <br>
+ * 不同的工厂实现了不同的搜索算法, 其性能特征取决于用例, 因此在选择之前可先针对具体的用例进行基准测试。
  * Different factories implement different search algorithms with performance characteristics that
  * depend on a use case, so it is advisable to benchmark a concrete use case with different algorithms
  * before choosing one of them.
  * <br>
+ * {@link AbstractSearchProcessorFactory}的实例是构建用来搜索某个具体的字节序列({@code needle}), 它包含需要的预计算数据来执行搜索,
+ * 同时无论何时搜索相同的{@code needle}, 它都可以重复使用。
  * A concrete instance of {@link AbstractSearchProcessorFactory} is built for searching for a concrete sequence of bytes
  * (the {@code needle}), it contains precomputed data needed to perform the search, and is meant to be reused
  * whenever searching for the same {@code needle}.
  * <br>
+ * 注意: {@link SearchProcessor}的实现依次扫描{@link io.netty.buffer.ByteBuf}, 而不会随机访问。因此, 当使用{@link SearchProcessor}的
+ * {@link io.netty.buffer.ByteBuf#forEachByte}之类的方法时, 这些方法返回{@link io.netty.buffer.ByteBuf}中找到的字节里最后一个字节的index。
+ * (这有些违反直觉, 并且与{@link io.netty.buffer.ByteBufUtil#indexOf}不同, 它会返回找到字节里第一个字节的index)。
  * <b>Note:</b> implementations of {@link SearchProcessor} scan the {@link io.netty.buffer.ByteBuf} sequentially,
  * one byte after another, without doing any random access. As a result, when using {@link SearchProcessor}
  * with such methods as {@link io.netty.buffer.ByteBuf#forEachByte}, these methods return the index of the last byte
@@ -32,6 +39,7 @@ package io.netty.buffer.search;
  * and different from {@link io.netty.buffer.ByteBufUtil#indexOf} which returns the index of the first byte
  * of found sequence).
  * <br>
+ *
  * A {@link SearchProcessor} is implemented as a
  * <a href="https://en.wikipedia.org/wiki/Finite-state_machine">Finite State Automaton</a> that contains a
  * small internal state which is updated with every byte processed. As a result, an instance of {@link SearchProcessor}
