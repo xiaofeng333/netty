@@ -195,6 +195,7 @@ import java.nio.charset.UnsupportedCharsetException;
  * For complicated searches, use {@link #forEachByte(int, int, ByteProcessor)} with a {@link ByteProcessor}
  * implementation.
  *
+ * 标记和重置
  * <h3>Mark and reset</h3>
  *
  * There are two marker indexes in every buffer. One is for storing
@@ -303,6 +304,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteOrder order();
 
     /**
+     * 返回具有指定字节序的buffer, 与当前buffer共享整个region、indexes和buffer的marks。
      * Returns a buffer with the specified {@code endianness} which shares the whole region,
      * indexes, and marks of this buffer.  Modifying the content, the indexes, or the marks of the
      * returned buffer or this buffer affects each other's content, indexes, and marks.  If the
@@ -1598,10 +1600,12 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteBuf readBytes(int length);
 
     /**
+     * 返回该buffer的子区域, 起点是{@code readerIndex}, 同时该buffer的 {@code readerIndex} 会增长(= {@code length})。
      * Returns a new slice of this buffer's sub-region starting at the current
      * {@code readerIndex} and increases the {@code readerIndex} by the size
      * of the new slice (= {@code length}).
      * <p>
+     * 该方法不会调用 {@link #retain()}, 因此其refcnt不会增加。
      * Also be aware that this method will NOT call {@link #retain()} and so the
      * reference count will NOT be increased.
      *
@@ -1609,6 +1613,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
      *
      * @return the newly created slice
      *
+     * 当 {@code length} 大于 {@code this.readableBytes} 时, 抛出异常。
      * @throws IndexOutOfBoundsException
      *         if {@code length} is greater than {@code this.readableBytes}
      */
@@ -2181,6 +2186,9 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract int forEachByteDesc(int index, int length, ByteProcessor processor);
 
     /**
+     * 返回该buffer可读字节的副本。
+     * 修改返回buffer或该buffer的内容不会相互影响。
+     * 该方法等同于 {@code buf.copy(buf.readerIndex(), buf.readableBytes())}。
      * Returns a copy of this buffer's readable bytes.  Modifying the content
      * of the returned buffer or this buffer does not affect each other at all.
      * This method is identical to {@code buf.copy(buf.readerIndex(), buf.readableBytes())}.
@@ -2198,6 +2206,11 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteBuf copy(int index, int length);
 
     /**
+     * 返回该buffer可读字节部分。
+     * 修改返回buffer或该buffer的内容, 会相互影响。
+     * 但是他们维护单独的索引和标记。
+     * 该方法等同于 {@code buf.slice(buf.readerIndex(), buf.readableBytes())}。
+     * 同时此方法不会修改 {@code readerIndex} 或 {@code writerIndex} 。
      * Returns a slice of this buffer's readable bytes. Modifying the content
      * of the returned buffer or this buffer affects each other's content
      * while they maintain separate indexes and marks.  This method is
@@ -2250,12 +2263,16 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteBuf retainedSlice(int index, int length);
 
     /**
+     * 返回{@link ByteBuf}, 与当前buffer共享数据。
+     * 修改返回的buffer或此buffer的内容会影响彼此的内容, 但是他们维护单独的索引和标记。
+     * 此方法不会修改 {@code readerIndex} 或 {@code writerIndex} 。
      * Returns a buffer which shares the whole region of this buffer.
      * Modifying the content of the returned buffer or this buffer affects
      * each other's content while they maintain separate indexes and marks.
      * This method does not modify {@code readerIndex} or {@code writerIndex} of
      * this buffer.
      * <p>
+     * 读写标记不会复制。另外此方法不会调用 {@link #retain()} , 所以refcnt不会增加。
      * The reader and writer marks will not be duplicated. Also be aware that this method will
      * NOT call {@link #retain()} and so the reference count will NOT be increased.
      * @return A buffer whose readable content is equivalent to the buffer returned by {@link #slice()}.

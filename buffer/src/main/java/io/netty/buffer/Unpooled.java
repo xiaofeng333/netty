@@ -28,6 +28,11 @@ import java.util.Arrays;
 
 
 /**
+ * 创建新的 {@link ByteBuf}。
+ * 有如下三种方式。
+ * 1. 分配新空间。
+ * 2. 包装(wrap)现有byte arrays/buffers/string。
+ * 3. 深度复制现有byte arrays/buffers/string。
  * Creates a new {@link ByteBuf} by allocating new space or by wrapping
  * or copying existing byte arrays, byte buffers and a string.
  *
@@ -58,7 +63,7 @@ import java.util.Arrays;
  * byte arrays and byte buffers.  Any changes in the content of the original
  * array or buffer will be visible in the wrapped buffer.  Various wrapper
  * methods are provided and their name is all {@code wrappedBuffer()}.
- * You might want to take a look at the methods that accept varargs closely if
+ * You might want to take a look at the methods that accept varargs(可变参数) closely if
  * you want to create a buffer which is composed of more than one array to
  * reduce the number of memory copy.
  *
@@ -75,6 +80,7 @@ public final class Unpooled {
     private static final ByteBufAllocator ALLOC = UnpooledByteBufAllocator.DEFAULT;
 
     /**
+     * 字节序的解释: https://www.cnblogs.com/jeffreyzhao/archive/2010/02/10/byte-order-and-related-library.html
      * Big endian byte order.
      */
     public static final ByteOrder BIG_ENDIAN = ByteOrder.BIG_ENDIAN;
@@ -149,6 +155,7 @@ public final class Unpooled {
     }
 
     /**
+     * 创建包装指定数组的新buffer。对指定数组内容的修改将对返回的buffer可见。
      * Creates a new big-endian buffer which wraps the specified {@code array}.
      * A modification on the specified array's content will be visible to the
      * returned buffer.
@@ -219,11 +226,14 @@ public final class Unpooled {
     }
 
     /**
+     * 创建新的buf, 包裹入参的可读字节。
+     * 入参内容的修改将在返回buf中可见。
      * Creates a new buffer which wraps the specified buffer's readable bytes.
      * A modification on the specified buffer's content will be visible to the
      * returned buffer.
-     * @param buffer The buffer to wrap. Reference count ownership of this variable is transferred to this method.
-     * @return The readable portion of the {@code buffer}, or an empty buffer if there is no readable portion.
+     * @param buffer refcnt被转移给返回的buf。 The buffer to wrap. Reference count ownership of this variable is transferred to this method.
+     * @return 入参的可读部分或空buf(如果入参没有可读字节) {@link EmptyByteBuf} 。
+     * The readable portion of the {@code buffer}, or an empty buffer if there is no readable portion.
      * The caller is responsible for releasing this buffer.
      */
     public static ByteBuf wrappedBuffer(ByteBuf buffer) {
@@ -245,6 +255,7 @@ public final class Unpooled {
     }
 
     /**
+     * refcnt被转移给返回的buf, 由其负责release。
      * Creates a new big-endian composite buffer which wraps the readable bytes of the
      * specified buffers without copying them.  A modification on the content
      * of the specified buffers will be visible to the returned buffer.

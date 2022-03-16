@@ -62,6 +62,9 @@ public class PooledByteBufAllocator extends AbstractByteBufAllocator implements 
         }
     };
 
+    /*
+     * 静态代码块里获取property。
+     */
     static {
         int defaultAlignment = SystemPropertyUtil.getInt(
                 "io.netty.allocator.directMemoryCacheAlignment", 0);
@@ -337,6 +340,7 @@ public class PooledByteBufAllocator extends AbstractByteBufAllocator implements 
             throw new IllegalArgumentException("pageSize: " + pageSize + " (expected: " + MIN_PAGE_SIZE + ')');
         }
 
+        // 判断是否为2的幂次方。
         if ((pageSize & pageSize - 1) != 0) {
             throw new IllegalArgumentException("pageSize: " + pageSize + " (expected: power of 2)");
         }

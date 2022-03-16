@@ -29,6 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.netty.buffer.PoolChunk.isSubpage;
 import static java.lang.Math.max;
 
+/**
+ * 为了提升并发性能, 内存池中包含一组PoolArena。
+ * PoolArena代表内存中一大块连续的区域, PoolArena由多个Chunk组成, 每个Chunk由多个Page组成。
+ */
 abstract class PoolArena<T> extends SizeClasses implements PoolArenaMetric {
     static final boolean HAS_UNSAFE = PlatformDependent.hasUnsafe();
 

@@ -16,11 +16,13 @@
 package io.netty.buffer;
 
 /**
+ * 暴露SizeClasses的metrics。
  * Expose metrics for an SizeClasses.
  */
 public interface SizeClassesMetric {
 
     /**
+     * 根据sizeIdx从lookup table计算size。
      * Computes size from lookup table according to sizeIdx.
      *
      * @return size
@@ -28,6 +30,7 @@ public interface SizeClassesMetric {
     int sizeIdx2size(int sizeIdx);
 
     /**
+     * 根据sizeIdx计算size。
      * Computes size according to sizeIdx.
      *
      * @return size
@@ -35,6 +38,7 @@ public interface SizeClassesMetric {
     int sizeIdx2sizeCompute(int sizeIdx);
 
     /**
+     * 根据pageIdx从lookup table计算size。
      * Computes size from lookup table according to pageIdx.
      *
      * @return size which is multiples of pageSize.
@@ -42,6 +46,7 @@ public interface SizeClassesMetric {
     long pageIdx2size(int pageIdx);
 
     /**
+     * 根据pageIdx计算size。
      * Computes size according to pageIdx.
      *
      * @return size which is multiples of pageSize
@@ -49,6 +54,7 @@ public interface SizeClassesMetric {
     long pageIdx2sizeCompute(int pageIdx);
 
     /**
+     * request size规范化为最接近(向上)的size class。
      * Normalizes request size up to the nearest size class.
      *
      * @param size request size
@@ -58,6 +64,7 @@ public interface SizeClassesMetric {
     int size2SizeIdx(int size);
 
     /**
+     * request size规范化为最接近(向上)的pageSize class。
      * Normalizes request size up to the nearest pageSize class.
      *
      * @param pages multiples of pageSizes
@@ -67,6 +74,7 @@ public interface SizeClassesMetric {
     int pages2pageIdx(int pages);
 
     /**
+     * request size规范化为最接近(向下)的pageSize class。
      * Normalizes request size down to the nearest pageSize class.
      *
      * @param pages multiples of pageSizes
@@ -76,6 +84,7 @@ public interface SizeClassesMetric {
     int pages2pageIdxFloor(int pages);
 
     /**
+     * 规范化可用的size, 用来分配具有指定size和标准的对象。
      * Normalizes usable size that would result from allocating an object with the
      * specified size and alignment.
      *

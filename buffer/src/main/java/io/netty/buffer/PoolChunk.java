@@ -24,6 +24,7 @@ import java.util.Deque;
 import java.util.PriorityQueue;
 
 /**
+ * 用来组织和管理多个Page的内存分配和释放, 默认为16MB。
  * Description of algorithm for PageRun/PoolSubpage allocation from PoolChunk
  *
  * Notation: The following terms are important to understand the code

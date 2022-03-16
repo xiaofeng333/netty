@@ -81,10 +81,14 @@ public abstract class AbstractByteBufAllocator implements ByteBufAllocator {
         return buf;
     }
 
+    /**
+     * 是否默认创建直接内存buf。
+     */
     private final boolean directByDefault;
     private final ByteBuf emptyBuf;
 
     /**
+     * Instance默认使用堆缓冲区。
      * Instance use heap buffers by default
      */
     protected AbstractByteBufAllocator() {

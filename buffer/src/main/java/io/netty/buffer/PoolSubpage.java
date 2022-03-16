@@ -22,6 +22,9 @@ import static io.netty.buffer.PoolChunk.IS_USED_SHIFT;
 import static io.netty.buffer.PoolChunk.IS_SUBPAGE_SHIFT;
 import static io.netty.buffer.SizeClasses.LOG2_QUANTUM;
 
+/**
+ *
+ */
 final class PoolSubpage<T> implements PoolSubpageMetric {
 
     final PoolChunk<T> chunk;

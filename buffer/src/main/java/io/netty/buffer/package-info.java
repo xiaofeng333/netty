@@ -15,9 +15,14 @@
  */
 
 /**
+ * 字节缓冲区的抽象 - 基本的数据结构来表示二进制和文本数据。
  * Abstraction of a byte buffer - the fundamental data structure
  * to represent a low-level binary and text message.
  *
+ * Netty 使用自己的缓冲区API代替NIO {@link java.nio.ByteBuffer} 来表示字节序列。
+ * 这种方法比使用 {@link java.nio.ByteBuffer} 有显著优势。
+ * Netty 的新缓冲区类型 {@link io.netty.buffer.ByteBuf}, 从设计上解决 {@link java.nio.ByteBuffer} 的问题并满足
+ * 网络应用开发者的日常需求。
  * Netty uses its own buffer API instead of NIO {@link java.nio.ByteBuffer} to
  * represent a sequence of bytes. This approach has significant advantage over
  * using {@link java.nio.ByteBuffer}.  Netty's new buffer type,
@@ -26,15 +31,22 @@
  * daily needs of network application developers.  To list a few cool features:
  * <ul>
  *   <li>You can define your buffer type if necessary.</li>
+ *   通过内置的composite buffer类型实现透明的zero copy。
  *   <li>Transparent zero copy is achieved by built-in composite buffer type.</li>
+ *   提供开箱即用的动态缓冲区类型, 其容量按需扩展, 就像 {@link java.lang.StringBuffer}。
  *   <li>A dynamic buffer type is provided out-of-the-box, whose capacity is
  *       expanded on demand, just like {@link java.lang.StringBuffer}.</li>
  *   <li>There's no need to call the {@code flip()} method anymore.</li>
  *   <li>It is often faster than {@link java.nio.ByteBuffer}.</li>
  * </ul>
  *
+ * 可扩展性
  * <h3>Extensibility</h3>
  *
+ * {@link io.netty.buffer.ByteBuf} 有丰富方法集用于快速操作。
+ * 例如 {@link io.netty.buffer.ByteBuf} 提供多个方法用于访问无符号值和字符串、搜索特定字节。
+ * 还可以扩展或包装现有的缓冲区类型添加便捷的操作。
+ * 自定义缓冲区类型仍需实现 {@link io.netty.buffer.ByteBuf} 接口而不是引入不兼容的类型。
  * {@link io.netty.buffer.ByteBuf} has rich set of operations
  * optimized for rapid protocol implementation.  For example,
  * {@link io.netty.buffer.ByteBuf} provides various operations
@@ -44,8 +56,14 @@
  * {@link io.netty.buffer.ByteBuf} interface rather than
  * introducing an incompatible type.
  *
+ * 透明零拷贝
  * <h3>Transparent Zero Copy</h3>
  *
+ * 要将网络应用程序的性能提升到极致, 需要减少内存复制操作的次数。
+ * 你可能有一组可以分片、重组以组成整个消息的缓冲区。 Netty提供了composite buffer, 允许创建新的buffer,
+ * 包含任意数量的现有buffers, 而不需要内存拷贝。
+ * 例如, 一个消息可以由两部分组成: 标题和正文。 在模块化应用程序中, 这两个部分可以由不同的模块产生,
+ * 然后稍后在发送消息时组装。
  * To lift up the performance of a network application to the extreme, you need
  * to reduce the number of memory copy operation.  You might have a set of
  * buffers that could be sliced and combined to compose a whole message.  Netty
@@ -89,8 +107,13 @@
  *     messageWithFooter.readableBytes() - footer.readableBytes() - 1);
  * </pre>
  *
+ * 自动容量扩展
  * <h3>Automatic Capacity Extension</h3>
  *
+ * 许多protocols定义了可变长度的消息, 这意味着直到构造消息前没有办法确定消息的长度, 或者它是
+ * 计算精确长度困难且不便。
+ * 这就像{@link java.lang.String} 一样, 你估计字符串长度, 并使用 {@link java.lang.StringBuffer}
+ * 在需要的时候进行扩展。
  * Many protocols define variable length messages, which means there's no way to
  * determine the length of a message until you construct the message or it is
  * difficult and inconvenient to calculate the length precisely.  It is just

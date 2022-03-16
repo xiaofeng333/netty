@@ -20,6 +20,7 @@ import io.netty.util.ReferenceCounted;
 /**
  * 发送或接收的数据包。
  * ？？？ ByteBufHolder为Netty的高级特性提供了支持, 如缓冲区池化, 可以从池中借用ByteBuf, 并且在需要时自动释放。
+ * 其和{@link CompositeByteBuf}的异同
  * A packet which is send or receive.
  */
 public interface ByteBufHolder extends ReferenceCounted {

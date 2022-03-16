@@ -35,6 +35,7 @@ import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.Charset;
 
 /**
+ * 空的 {@link ByteBuf}, capacity和最大的capacity是0。
  * An empty {@link ByteBuf} whose capacity and maximum capacity are all {@code 0}.
  */
 public final class EmptyByteBuf extends ByteBuf {

@@ -19,8 +19,8 @@ import io.netty.util.internal.ObjectUtil;
 import io.netty.util.internal.StringUtil;
 
 /**
+ * {@link ByteBufHolder} 的默认实现, 数据保存在一个 {@link ByteBuf} 中。
  * Default implementation of a {@link ByteBufHolder} that holds it's data in a {@link ByteBuf}.
- *
  */
 public class DefaultByteBufHolder implements ByteBufHolder {
 
