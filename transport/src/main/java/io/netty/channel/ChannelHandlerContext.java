@@ -23,8 +23,8 @@ import io.netty.util.AttributeMap;
 import io.netty.util.concurrent.EventExecutor;
 
 /**
- * Enables a {@link ChannelHandler} to interact with its {@link ChannelPipeline}
- * and other handlers. Among other things a handler can notify the next {@link ChannelHandler} in the
+ * Enables(使...能够) a {@link ChannelHandler} to interact with its {@link ChannelPipeline}
+ * and other handlers. Among(在...之间) other things a handler can notify the next {@link ChannelHandler} in the
  * {@link ChannelPipeline} as well as modify the {@link ChannelPipeline} it belongs to dynamically.
  *
  * <h3>Notify</h3>
@@ -37,10 +37,10 @@ import io.netty.util.concurrent.EventExecutor;
  * <h3>Modifying a pipeline</h3>
  *
  * You can get the {@link ChannelPipeline} your handler belongs to by calling
- * {@link #pipeline()}.  A non-trivial application could insert, remove, or
+ * {@link #pipeline()}.  A non-trivial(优秀) application could insert, remove, or
  * replace handlers in the pipeline dynamically at runtime.
  *
- * <h3>Retrieving for later use</h3>
+ * <h3>Retrieving(取回) for later use</h3>
  *
  * You can keep the {@link ChannelHandlerContext} for later use, such as
  * triggering an event outside the handler methods, even from a different thread.
@@ -60,6 +60,7 @@ import io.netty.util.concurrent.EventExecutor;
  * }
  * </pre>
  *
+ * 保存状态信息
  * <h3>Storing stateful information</h3>
  *
  * {@link #attr(AttributeKey)} allow you to
@@ -67,6 +68,7 @@ import io.netty.util.concurrent.EventExecutor;
  * context. Please refer to {@link ChannelHandler} to learn various recommended
  * ways to manage stateful information.
  *
+ * 一个handler可以有多个 {@link ChannelHandlerContext}。
  * <h3>A handler can have more than one {@link ChannelHandlerContext}</h3>
  *
  * Please note that a {@link ChannelHandler} instance can be added to more than
@@ -92,7 +94,7 @@ public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvok
     Channel channel();
 
     /**
-     * Returns the {@link EventExecutor} which is used to execute an arbitrary task.
+     * Returns the {@link EventExecutor} which is used to execute an arbitrary(任意) task.
      */
     EventExecutor executor();
 

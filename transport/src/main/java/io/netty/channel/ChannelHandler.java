@@ -26,6 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 处理I/O时间或拦截I/O操作, 并转发给 {@link ChannelPipeline} 的下一个handler。
  * Handles an I/O event or intercepts an I/O operation, and forwards it to its next handler in
  * its {@link ChannelPipeline}.
  *
@@ -51,6 +52,7 @@ import java.lang.annotation.Target;
  *
  * <h3>The context object</h3>
  * <p>
+ * {@link ChannelHandler} 通过  {@link ChannelHandlerContext} 对象与 {@link ChannelPipeline} 交互。
  * A {@link ChannelHandler} is provided with a {@link ChannelHandlerContext}
  * object.  A {@link ChannelHandler} is supposed to interact with the
  * {@link ChannelPipeline} it belongs to via a context object.  Using the
@@ -58,6 +60,7 @@ import java.lang.annotation.Target;
  * downstream, modify the pipeline dynamically, or store the information
  * (using {@link AttributeKey}s) which is specific to the handler.
  *
+ * 状态管理
  * <h3>State management</h3>
  *
  * A {@link ChannelHandler} often needs to store some stateful information.
@@ -87,6 +90,7 @@ import java.lang.annotation.Target;
  *     ...
  * }
  * </pre>
+ * 当一个handler对应一个connection时, handler可以持有状态, 且避免条件竞争。
  * Because the handler instance has a state variable which is dedicated to
  * one connection, you have to create a new handler instance for each new
  * channel to avoid a race condition where a unauthenticated client can get
@@ -156,6 +160,7 @@ import java.lang.annotation.Target;
  * In the example above which used an {@link AttributeKey},
  * you might have noticed the {@code @Sharable} annotation.
  * <p>
+ * 如果 {@link ChannelHandler} 上标有  {@code @Sharable} 注解, 其是可共享的。
  * If a {@link ChannelHandler} is annotated with the {@code @Sharable}
  * annotation, it means you can create an instance of the handler just once and
  * add it to one or more {@link ChannelPipeline}s multiple times without
@@ -172,7 +177,7 @@ import java.lang.annotation.Target;
  * <p>
  * Please refer to the {@link ChannelHandler}, and
  * {@link ChannelPipeline} to find out more about inbound and outbound operations,
- * what fundamental differences they have, how they flow in a  pipeline,  and how to handle
+ * what fundamental(基本的) differences they have, how they flow in a  pipeline,  and how to handle
  * the operation in your application.
  */
 public interface ChannelHandler {

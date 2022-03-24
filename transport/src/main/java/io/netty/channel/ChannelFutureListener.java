@@ -24,6 +24,7 @@ import io.netty.util.concurrent.GenericFutureListener;
  * asynchronous {@link Channel} I/O operation is notified once this listener
  * is added by calling {@link ChannelFuture#addListener(GenericFutureListener)}.
  *
+ * 尽快将控制权返回给caller
  * <h3>Return the control to the caller quickly</h3>
  *
  * {@link #operationComplete(Future)} is directly called by an I/O
@@ -60,7 +61,7 @@ public interface ChannelFutureListener extends GenericFutureListener<ChannelFutu
 
     /**
      * A {@link ChannelFutureListener} that forwards the {@link Throwable} of the {@link ChannelFuture} into the
-     * {@link ChannelPipeline}. This mimics the old behavior of Netty 3.
+     * {@link ChannelPipeline}. This mimics(mimics) the old behavior of Netty 3.
      */
     ChannelFutureListener FIRE_EXCEPTION_ON_FAILURE = new ChannelFutureListener() {
         @Override

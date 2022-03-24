@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ * 异步 {@link Channel} I/O 操作的结果。
  * The result of an asynchronous {@link Channel} I/O operation.
  * <p>
  * All I/O operations in Netty are asynchronous.  It means any I/O calls will
@@ -64,6 +65,7 @@ import java.util.concurrent.TimeUnit;
  * operation. It also allows you to add {@link ChannelFutureListener}s so you
  * can get notified when the I/O operation is completed.
  *
+ * 推荐使用 {@link #addListener(GenericFutureListener)} 而不是 {@link #await()}。
  * <h3>Prefer {@link #addListener(GenericFutureListener)} to {@link #await()}</h3>
  *
  * It is recommended to prefer {@link #addListener(GenericFutureListener)} to
@@ -74,19 +76,21 @@ import java.util.concurrent.TimeUnit;
  * the specified {@link ChannelFutureListener} to the {@link ChannelFuture}, and
  * I/O thread will notify the listeners when the I/O operation associated with
  * the future is done.  {@link ChannelFutureListener} yields the best
- * performance and resource utilization because it does not block at all, but
- * it could be tricky to implement a sequential logic if you are not used to
+ * performance and resource utilization(表现了最好的性能和资源利用率) because it does not block at all, but
+ * it could be tricky(棘手) to implement a sequential logic(顺序执行) if you are not used to
  * event-driven programming.
  * <p>
  * By contrast, {@link #await()} is a blocking operation.  Once called, the
  * caller thread blocks until the operation is done.  It is easier to implement
  * a sequential logic with {@link #await()}, but the caller thread blocks
  * unnecessarily until the I/O operation is done and there's relatively
- * expensive cost of inter-thread notification.  Moreover, there's a chance of
+ * expensive cost of inter-thread notification(线程间较高的通知成本).  Moreover, there's a chance of
  * dead lock in a particular circumstance, which is described below.
  *
+ * 不要在 {@link ChannelHandler} 内调用 {@link #await()}
  * <h3>Do not call {@link #await()} inside {@link ChannelHandler}</h3>
  * <p>
+ * await方法会阻塞I/O操作线程, 但是它需要等待该I/O线程完结, 这是个死锁。
  * The event handler methods in {@link ChannelHandler} are usually called by
  * an I/O thread.  If {@link #await()} is called by an event handler
  * method, which is called by the I/O thread, the I/O operation it is waiting
@@ -120,13 +124,13 @@ import java.util.concurrent.TimeUnit;
  * make sure you do not call {@link #await()} in an I/O thread.  Otherwise,
  * {@link BlockingOperationException} will be raised to prevent a dead lock.
  *
- * <h3>Do not confuse I/O timeout and await timeout</h3>
+ * <h3>Do not confuse(混淆) I/O timeout and await timeout</h3>
  *
  * The timeout value you specify with {@link #await(long)},
  * {@link #await(long, TimeUnit)}, {@link #awaitUninterruptibly(long)}, or
  * {@link #awaitUninterruptibly(long, TimeUnit)} are not related with I/O
  * timeout at all.  If an I/O operation times out, the future will be marked as
- * 'completed with failure,' as depicted in the diagram above.  For example,
+ * 'completed with failure,' as depicted(描绘) in the diagram above.  For example,
  * connect timeout should be configured via a transport-specific option:
  * <pre>
  * // BAD - NEVER DO THIS

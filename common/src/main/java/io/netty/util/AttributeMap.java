@@ -16,6 +16,7 @@
 package io.netty.util;
 
 /**
+ * 实现类需是线程安全的。
  * Holds {@link Attribute}s which can be accessed via {@link AttributeKey}.
  *
  * Implementations must be Thread-safe.

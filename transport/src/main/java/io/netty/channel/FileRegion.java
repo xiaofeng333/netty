@@ -22,6 +22,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
 
 /**
+ * 支持零拷贝。
  * A region of a file that is sent via a {@link Channel} which supports
  * <a href="https://en.wikipedia.org/wiki/Zero-copy">zero-copy file transfer</a>.
  *

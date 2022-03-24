@@ -35,7 +35,7 @@ public interface DatagramChannel extends Channel {
     InetSocketAddress remoteAddress();
 
     /**
-     * Return {@code true} if the {@link DatagramChannel} is connected to the remote peer.
+     * Return {@code true} if the {@link DatagramChannel} is connected to the remote peer(对等点).
      */
     boolean isConnected();
 

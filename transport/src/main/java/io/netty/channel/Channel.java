@@ -28,6 +28,7 @@ import java.net.SocketAddress;
 
 
 /**
+ * 网络套接字或负责I/O操作(读、写、连接、绑定)组件的纽带。
  * A nexus to a network socket or a component which is capable of I/O
  * operations such as read, write, connect, and bind.
  * <p>
@@ -40,6 +41,7 @@ import java.net.SocketAddress;
  *     associated with the channel.</li>
  * </ul>
  *
+ * 所有的I/O操作是异步的。
  * <h3>All I/O operations are asynchronous.</h3>
  * <p>
  * All I/O operations in Netty are asynchronous.  It means any I/O calls will
@@ -48,6 +50,7 @@ import java.net.SocketAddress;
  * a {@link ChannelFuture} instance which will notify you when the requested I/O
  * operation has succeeded, failed, or canceled.
  *
+ * Channels是有层次结构的。
  * <h3>Channels are hierarchical</h3>
  * <p>
  * A {@link Channel} can have a {@linkplain #parent() parent} depending on
@@ -61,6 +64,7 @@ import java.net.SocketAddress;
  * share one socket connection, as <a href="http://beepcore.org/">BEEP</a> and
  * <a href="https://en.wikipedia.org/wiki/Secure_Shell">SSH</a> do.
  *
+ * 转换为子类型以访问特定传输操作。
  * <h3>Downcast to access transport-specific operations</h3>
  * <p>
  * Some transports exposes additional operations that is specific to the
@@ -68,6 +72,7 @@ import java.net.SocketAddress;
  * operations.  For example, with the old I/O datagram transport, multicast
  * join / leave operations are provided by {@link DatagramChannel}.
  *
+ * 释放资源
  * <h3>Release resources</h3>
  * <p>
  * It is important to call {@link #close()} or {@link #close(ChannelPromise)} to release all
@@ -153,6 +158,8 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     ChannelFuture closeFuture();
 
     /**
+     * 当且仅当I/O线程将立即执行请求的写入操作时返回true。
+     * 当此方法返回false时发出的任何写入请求都会排队, 直到I/O线程准备好处理排队的写入请求。
      * Returns {@code true} if and only if the I/O thread will perform the
      * requested write operation immediately.  Any write requests made when
      * this method returns {@code false} are queued until the I/O thread is
@@ -194,6 +201,7 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     Channel flush();
 
     /**
+     * Unsafe不应该在用户代码中调用。
      * <em>Unsafe</em> operations that should <em>never</em> be called from user-code. These methods
      * are only provided to implement the actual transport, and must be invoked from an I/O thread except for the
      * following methods:
